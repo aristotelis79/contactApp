@@ -1,0 +1,19 @@
+﻿@model ContactViewModel
+
+@{
+    ViewBag.Title = "Create Contact";
+    Layout = "_Layout";
+}
+<div id="contact-form">
+    <div class="container-fluid">
+
+        <h2>@ViewBag.Title</h2>
+
+        <form asp-controller="Contact" , asp-action="Create" asp-antiforgery="true">
+
+            <partial name="_CreateOrEditContact" />
+        </form>
+
+        <partial name="_AddContactTemplate" />
+    </div>
+</div>

@@ -1,0 +1,64 @@
+﻿@model ContactViewModel
+
+<div id="phone-template" class="hidden">
+    <div class="form-group" id="phone-{0}">
+        <div class="row">
+            <div class="col">
+                <input type="text" class="form-control" placeholder="PhoneType" aria-label="PhoneType" id="Phones_{0}__PhoneType" name="Phones[{0}].PhoneType" />
+                <span class="field-validation-valid" data-valmsg-for="Phones[{0}].PhoneType" data-valmsg-replace="true"></span>
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" placeholder="PhoneNumber" aria-label="PhoneNumber" id="Phones_{0}__PhoneNumber" name="Phones[{0}].PhoneNumber" />
+                <span class="field-validation-valid" data-valmsg-for="Phones[{0}].PhoneNumber" data-valmsg-replace="true"></span>
+            </div>
+            <div class="col-2 text-right">
+                <button class="btn btn-danger delete-phone" type="button" data-phoneid="phone-{0}" data-number="{0}" >Delete Phone</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        addPhone.init(@Model.Phones.Count);
+    });
+
+    //Add Phone Object
+    var addPhone = {
+        init: function(count) {
+            this.count = count;
+            $("#add_phone").on("click", this.addPhone);
+            $("#contact-form").on("click",".delete-phone", this.deletePhone);
+
+            addPhone.disablePreviousDeleteButtons();
+        },
+        count: 0,
+        addPhone: function() {
+            const $template = $("#phone-template").clone();
+
+            const $phoneItemHtml = $template.html().replace(/\{0}/g, addPhone.count);
+
+            $("#additional-phone").append($phoneItemHtml);
+
+            addPhone.count += 1;
+
+            addPhone.disablePreviousDeleteButtons();
+        },
+        deletePhone: function() {
+            var phone = $(this).data("phoneid");
+            $("#" + phone).remove();
+
+            addPhone.count -= 1;
+
+            addPhone.disablePreviousDeleteButtons();
+        },
+        disablePreviousDeleteButtons: function() {
+            $(".delete-phone").each(function() {
+                if ($(this).data("number") < addPhone.count - 1) {
+                    $(this).attr("disabled", true);
+                } else {
+                    $(this).attr("disabled", false);
+                }
+            });
+        }
+    };
+</script>

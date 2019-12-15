@@ -1,0 +1,74 @@
+﻿@{
+    ViewData["Title"] = "Contacts";
+    ViewBag.Title = "Contacts";
+}
+@model List<ContactViewModel>
+@{
+    var hasPhones = Model.Any() && Model.FirstOrDefault()?.Phones.Any() != null;
+    var maxTotalPhones = hasPhones ? Model.Select(s => s.TotalPhones).Max() : 0 ;
+}
+<div class="text-center">
+
+    <h1 class="display-4">@ViewBag.Title</h1>
+
+    <br />
+
+    <table id="phones-table" style="width: 100%">
+        <thead>
+            <tr>
+                <th>FullName</th>
+                <th>Email</th>
+                <th>Address</th>
+                @{
+                    if (hasPhones)
+                    {
+                        for (var p = 1; p <= maxTotalPhones; p++)
+                        {
+                            <th>Phone @p</th>
+                        }
+                    }
+                }
+            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var contactViewModel in Model)
+        {
+            <tr>
+                <td class="max-width-100">@contactViewModel.FullName</td>
+                <td>@contactViewModel.Email</td>
+                <td class="max-width-100">@contactViewModel.Address</td>
+                
+                @if (hasPhones)
+                {
+                    for (var p = 0; p < maxTotalPhones; p++)
+                    {
+                        if (contactViewModel.TotalPhones >= p + 1)
+                        {
+                            <td data-toggle="tooltip" data-placement="left" title="@contactViewModel.Phones[p].PhoneType">
+                                @contactViewModel.Phones[p].PhoneNumber
+                            </td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                    }
+                }
+    
+                <td>
+                    <a type="button" class="btn btn-info" asp-controller="Contact" asp-action="Details" asp-route-id="@contactViewModel.Id">
+                        Details
+                    </a>
+                    <a type="button" class="btn btn-primary" asp-controller="Contact" asp-action="Edit" asp-route-id="@contactViewModel.Id">
+                        Edit
+                    </a>
+                    <button type="button" class="btn btn-danger delete-contact" data-deleteid="@contactViewModel.Id">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
