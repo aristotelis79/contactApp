@@ -64,3 +64,4 @@
 
 #Fix for correct recognize language from github
 *.cs linguist-language=C#
+*.js linguist-language=C#
